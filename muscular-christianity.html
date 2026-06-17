@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Revival — God and Mammon · Instrument IV</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --parchment: #F3ECD8;
+  --parchment-deep: #EAE0C3;
+  --ink: #261D14;
+  --ink-soft: #5B4C3A;
+  --rubric: #8C3526;
+  --ledger: #3F5536;
+  --gold: #9C7A3C;
+  --edge: #C9BB95;
+  --stone: #6B6458;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background:
+    radial-gradient(ellipse at 20% -10%, rgba(255,253,244,0.55), transparent 55%),
+    radial-gradient(ellipse at 100% 110%, rgba(0,0,0,0.05), transparent 60%),
+    var(--parchment);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 740px;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 5vw, 1.5rem) 8rem;
+}
+
+.eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.6rem;
+}
+
+h1.title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2.2rem, 6vw, 3.4rem);
+  line-height: 1.0;
+  margin: 0.2rem 0 0.2rem;
+}
+
+.dateline {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+}
+
+hr.rule {
+  border: none;
+  border-top: 1px solid var(--edge);
+  margin: 2rem 0;
+}
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+.brief { margin-bottom: 1.5rem; }
+.brief p { font-size: 1rem; color: var(--ink-soft); margin: 0 0 0.75rem; }
+.brief p strong { color: var(--ink); font-weight: 500; }
+
+/* VENUE CARD — like the programme in Instrument III */
+.venue {
+  border: 1px solid var(--stone);
+  padding: 1.4rem 1.8rem;
+  margin-bottom: 1.75rem;
+  background: var(--parchment-deep);
+  text-align: center;
+}
+
+.venue-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--ink);
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.04em;
+}
+
+.venue-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 0.75rem;
+}
+
+.venue-rule { border: none; border-top: 1px solid var(--edge); margin: 0.75rem 0; }
+
+.venue-detail {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
+/* SERMON */
+.sermon {
+  background: var(--parchment-deep);
+  border: 1px solid var(--edge);
+  border-radius: 2px;
+  padding: 1.6rem 1.8rem;
+  margin: 0 0 1.5rem;
+}
+
+.sermon-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 0.9rem;
+}
+
+.sermon-text {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: clamp(1rem, 2.2vw, 1.12rem);
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+.sermon-text p { margin: 0 0 0.9rem; }
+.sermon-text p:last-child { margin-bottom: 0; }
+
+.sermon.shift {
+  border-left: 3px solid var(--rubric);
+}
+.sermon.shift .sermon-label { color: var(--rubric); }
+
+/* TASK */
+.task {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+  color: var(--ink);
+  line-height: 1.35;
+  margin: 1.75rem 0 0.75rem;
+}
+
+.response-area {
+  width: 100%;
+  min-height: 80px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--edge);
+  font-family: 'DM Sans', sans-serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 0.95rem;
+  color: var(--ink);
+  line-height: 1.6;
+  padding: 8px 0;
+  resize: none;
+  outline: none;
+  transition: border-color 0.15s;
+  display: block;
+}
+.response-area:focus { border-bottom-color: var(--gold); }
+.response-area::placeholder { color: var(--edge); }
+
+.advance-wrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.75rem;
+}
+
+.btn-advance {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.75rem 2rem;
+  border-radius: 2px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--parchment);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-advance:hover { opacity: 0.82; }
+
+/* STAGE 3 — FOUR EXCERPTS */
+.excerpt-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--edge);
+  border: 1px solid var(--edge);
+  margin: 1.5rem 0;
+}
+
+.excerpt {
+  background: var(--parchment-deep);
+  padding: 1.3rem 1.5rem;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.excerpt:hover { background: var(--parchment); }
+
+.excerpt-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 0.6rem;
+}
+
+.excerpt-text {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: clamp(0.95rem, 2vw, 1.05rem);
+  color: var(--ink);
+  line-height: 1.65;
+}
+
+/* Selected state */
+.excerpt.selected {
+  background: var(--parchment);
+  border-left: 3px solid var(--rubric);
+}
+
+.excerpt.selected .excerpt-label { color: var(--rubric); }
+
+/* REVEAL — dates appear after selection */
+.excerpt-reveal {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  margin-top: 0.6rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--edge);
+  display: none;
+}
+
+.excerpt-reveal.show { display: block; }
+
+/* DATES GRID — revealed all at once */
+.dates-reveal {
+  margin: 1.75rem 0;
+  border: 1px solid var(--edge);
+  background: var(--parchment-deep);
+  display: none;
+}
+
+.dates-reveal.show { display: block; }
+
+.dates-row {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  border-bottom: 1px solid var(--edge);
+}
+.dates-row:last-child { border-bottom: none; }
+
+.dates-year {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--stone);
+  padding: 0.85rem 1rem;
+  border-right: 1px solid var(--edge);
+  display: flex;
+  align-items: flex-start;
+  padding-top: 0.95rem;
+}
+
+.dates-who {
+  padding: 0.85rem 1.2rem;
+  font-size: 0.92rem;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.dates-who em {
+  display: block;
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+/* FINAL */
+.final-block {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--edge);
+}
+
+.final-question {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.15rem, 3vw, 1.5rem);
+  color: var(--ink);
+  line-height: 1.3;
+  font-style: italic;
+}
+
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="eyebrow">God and Mammon &nbsp;·&nbsp; Instrument IV</div>
+    <h1 class="title">A Revival</h1>
+    <div class="dateline">New York City</div>
+  </header>
+
+  <hr class="rule">
+
+  <!-- STAGE 1 — THE PREACHER -->
+  <section class="screen active" id="s1">
+    <div class="brief">
+      <p>You are in a tent in New York City. A preacher is addressing thousands of people. <strong>Listen.</strong></p>
+    </div>
+
+    <div class="venue">
+      <div class="venue-title">Revival Meeting</div>
+      <div class="venue-sub">New York City · Attendance: thousands</div>
+      <hr class="venue-rule">
+      <div class="venue-detail">
+        The preacher speaks without notes.<br>
+        He is known for his physical style — pacing, gesturing, shouting.
+      </div>
+    </div>
+
+    <div class="sermon">
+      <div class="sermon-label">From the sermon</div>
+      <div class="sermon-text">
+        <p>Lord save us from off-handed, flabby-cheeked, brittle-boned, weak-kneed, thin-skinned, pliable, plastic, spineless, effeminate, ossified, three-carat Christianity.</p>
+        <p>We need men, men who are not too good for their own good — men of mental and moral backbone. Men who will fight for what they believe to be right.</p>
+        <p>The manliest man is the man who will acknowledge Jesus Christ. Don't let the world or the devil or other men make a jellyfish out of you.</p>
+      </div>
+    </div>
+
+    <p class="task">What kind of man is this preacher calling for?</p>
+    <textarea class="response-area" id="r1" placeholder="Write anything." rows="3"></textarea>
+
+    <div class="advance-wrap">
+      <button class="btn-advance" onclick="goTo('s2')">Continue →</button>
+    </div>
+  </section>
+
+  <!-- STAGE 2 — THE POLITICS ARRIVE -->
+  <section class="screen" id="s2">
+    <div class="brief">
+      <p>The sermon continues.</p>
+    </div>
+
+    <div class="sermon shift">
+      <div class="sermon-label">Later in the same sermon</div>
+      <div class="sermon-text">
+        <p>The soldier who breaks every regulation and swears a blue streak may be a better man than the God-forsaken, vile, pusillanimous, yellow-streaked, white-livered mutt who won't even enlist. I'd rather have a man with some red blood in him than one of these wishy-washy, sissified, lily-livered preachers who prays: "O Lord, be with both sides in this war."</p>
+        <p>In these days all men and all nations must fall in one of two classes — they are either patriots or traitors, either for their country or against it, either for God or against Him.</p>
+        <p>In these days all are patriots or traitors, to your country and to Jesus Christ.</p>
+      </div>
+    </div>
+
+    <p class="task">What has happened to the sermon?</p>
+    <textarea class="response-area" id="r2" placeholder="Write anything." rows="3"></textarea>
+
+    <div class="advance-wrap">
+      <button class="btn-advance" onclick="goTo('s3')">Continue →</button>
+    </div>
+  </section>
+
+  <!-- STAGE 3 — WHICH IS THE SERMON? -->
+  <section class="screen" id="s3">
+    <div class="brief">
+      <p>Four excerpts from American public life. All invoke Christianity. All invoke masculinity or national strength.</p>
+      <p><strong>Which of these sounds most different from the others?</strong></p>
+    </div>
+
+    <div class="excerpt-grid" id="excerptGrid">
+
+      <div class="excerpt" data-id="a" onclick="selectExcerpt('a')">
+        <div class="excerpt-label">Excerpt A</div>
+        <div class="excerpt-text">"Promise Keepers believes that there is a war on the family within society and every man is being called upon to lead and protect his wife and children, actively discern his culture, defend his convictions and discipline his children."</div>
+        <div class="excerpt-reveal" id="rev-a">Promise Keepers official statement of purpose, 1990s. Founded 1990 by Bill McCartney, University of Colorado football coach. Peak year 1996: seven stadium events, 1.1 million men in attendance.</div>
+      </div>
+
+      <div class="excerpt" data-id="b" onclick="selectExcerpt('b')">
+        <div class="excerpt-label">Excerpt B</div>
+        <div class="excerpt-text">"The primary cause of this national crisis is the feminisation of the American male. I believe that feminism's philosophy has filtered into the church. Men have declined the responsibility God gave them, and women had no choice but to fill the vacuum. But now, as a man of God, I am asking you to take back that leadership. I'm not asking you to ask for it. I'm urging you to take it."</div>
+        <div class="excerpt-reveal" id="rev-b">Tony Evans, Promise Keepers national conference, Boulder, Colorado, 1993. Evans was one of the movement's most prominent speakers. Combined attendance at 1996 Promise Keepers stadium events: 1.1 million men.</div>
+      </div>
+
+      <div class="excerpt" data-id="c" onclick="selectExcerpt('c')">
+        <div class="excerpt-label">Excerpt C</div>
+        <div class="excerpt-text">"Lord save us from off-handed, flabby-cheeked, brittle-boned, weak-kneed, thin-skinned, pliable, plastic, spineless, effeminate, ossified, three-carat Christianity. We need men who will fight for what they believe to be right."</div>
+        <div class="excerpt-reveal" id="rev-c">Billy Sunday, New York revival, 1917. Sunday was the most famous evangelist in America. This sermon was delivered during the First World War.</div>
+      </div>
+
+      <div class="excerpt" data-id="d" onclick="selectExcerpt('d')">
+        <div class="excerpt-label">Excerpt D</div>
+        <div class="excerpt-text">"We are one movement, one people, one family, and one glorious nation under God. Together we will make America powerful again — and together, we will make America great again. God bless you, God bless the United States of America."</div>
+        <div class="excerpt-reveal" id="rev-d">Donald Trump, campaign rally, 2016–2020. Trump received approximately 81% of the white evangelical vote in 2016 — the highest share recorded for any presidential candidate.</div>
+      </div>
+
+    </div>
+
+    <div id="reveal-prompt" style="font-family:'DM Serif Display',serif; font-style:italic; font-size:1rem; color:var(--ink-soft); margin: 1rem 0 0.5rem; display:none;"></div>
+
+    <div class="dates-reveal" id="datesReveal">
+      <div class="dates-row">
+        <div class="dates-year">1917</div>
+        <div class="dates-who">Billy Sunday — Excerpt C
+          <em>New York City revival. Delivered to tens of thousands during the First World War.</em>
+        </div>
+      </div>
+      <div class="dates-row">
+        <div class="dates-year">1993</div>
+        <div class="dates-who">Tony Evans, Promise Keepers — Excerpt B
+          <em>Evans told men to "take back" household leadership from women. The audience gave a standing ovation.</em>
+        </div>
+      </div>
+      <div class="dates-row">
+        <div class="dates-year">1990s</div>
+        <div class="dates-who">Promise Keepers — Excerpt A
+          <em>Founded 1990. Peak year 1996: 1.1 million men in stadiums across America. Founded by a football coach.</em>
+        </div>
+      </div>
+      <div class="dates-row">
+        <div class="dates-year">2016–20</div>
+        <div class="dates-who">Donald Trump — Excerpt D
+          <em>81% of white evangelical voters in 2016. The highest share for any presidential candidate on record.</em>
+        </div>
+      </div>
+    </div>
+
+    <div class="final-block" id="finalBlock" style="display:none;">
+      <p style="font-family:'DM Mono',monospace; font-size:0.82rem; color:var(--stone); line-height:2.2; margin-bottom:1.5rem; padding-bottom:1.5rem; border-bottom:1px solid var(--edge);">1917<br>1993<br>1996<br>2016</p>
+      <p class="final-question">Who is this Jesus?</p>
+    </div>
+
+  </section>
+
+</div>
+
+<script>
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+let chosen = false;
+
+function selectExcerpt(id) {
+  if (chosen) return;
+  chosen = true;
+
+  // Mark selected
+  document.querySelectorAll('.excerpt').forEach(el => {
+    if (el.dataset.id === id) {
+      el.classList.add('selected');
+    }
+  });
+
+  // Reveal all dates simultaneously
+  document.querySelectorAll('.excerpt-reveal').forEach(el => el.classList.add('show'));
+  document.getElementById('datesReveal').classList.add('show');
+  document.getElementById('finalBlock').style.display = 'block';
+  document.getElementById('reveal-prompt').textContent = 'The excerpt you chose sounds most different. Here is when each was made.';
+  document.getElementById('reveal-prompt').style.display = 'block';
+
+  // Scroll to reveal
+  setTimeout(() => {
+    document.getElementById('datesReveal').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 150);
+}
+</script>
+</body>
+</html>
